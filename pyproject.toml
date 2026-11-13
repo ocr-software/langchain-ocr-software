@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools==82.0.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "langchain-ocr-software"
+version = "0.1.0"
+description = "LangChain document loader that reads PDFs and scans with the ocr-software.com OCR API."
+readme = {file = "INSTALL.txt", content-type = "text/markdown"}
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+dependencies = ["langchain-core>=0.3,<2", "ocr-software==0.1.0"]
+keywords = ["langchain", "ocr", "pdf", "document-loader", "rag"]
+classifiers = ["Programming Language :: Python :: 3"]
+
+[project.optional-dependencies]
+test = ["pytest==9.0.2"]
+
+[project.urls]
+Homepage = "https://ocr-software.com/"
+Repository = "https://github.com/ocr-software/langchain-ocr-software"
+
+[tool.setuptools]
+packages = ["langchain_ocr_software"]

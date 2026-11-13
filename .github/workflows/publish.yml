@@ -1,0 +1,26 @@
+# Trusted Publishing: no token in the repository. One-time setup on pypi.org (project, Publishing, add a GitHub publisher):
+# owner ocr-software, repository langchain-ocr-software, workflow publish.yml, environment pypi. Then: create a GitHub release.
+name: publish
+on:
+  release:
+    types: [published]
+jobs:
+  test-build-publish:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - uses: actions/setup-python@v5.6.0
+        with:
+          python-version: "3.12"
+      - name: tag must match the version in pyproject.toml
+        run: python -c "import os,sys,tomllib;v=tomllib.load(open('pyproject.toml','rb'))['project']['version'];t=os.environ['GITHUB_REF_NAME'];sys.exit(0 if t=='v'+v else 'release tag %s does not match version %s' % (t,v))"
+      - run: python -m pip install build==1.4.0 twine==6.2.0
+      - run: python -m pip install -e ".[test]"
+      - run: python -m pytest -p no:cacheprovider .
+      - run: python -m build
+      - run: python -m twine check dist/*
+      - uses: pypa/gh-action-pypi-publish@v1.13.0
